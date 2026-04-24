@@ -153,9 +153,14 @@ export default function Accueil() {
               Danser, chanter, slamer — partagez votre art avec la scène de
               La Magie du Soir.
             </p>
-            <Link to="/candidater" className="casting-cta__btn">
+            <a
+              href="https://www.lamagiedusoir.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="casting-cta__btn"
+            >
               Soumettez votre candidature
-            </Link>
+            </a>
           </div>
         </section>
       </main>

@@ -1,11 +1,18 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const NAV = [
-  { path: '/admin/dashboard',   label: "Vue d'ensemble", icon: '/images/sidebar-icon-dashboard.svg' },
-  { path: '/admin/billetterie', label: 'Billetterie',    icon: '/images/sidebar-icon-billetterie.svg' },
-  { path: '/admin/candidats',   label: 'Candidats',      icon: '/images/sidebar-icon-candidats.svg' },
-  { path: '/admin/cms',         label: 'Contenu CMS',    icon: '/images/sidebar-icon-cms.svg' },
-  { path: '/admin/config',      label: 'Configuration',  icon: '/images/sidebar-icon-config.svg' },
+interface NavItem {
+  path: string;
+  label: string;
+  icon: string;
+  external?: boolean;
+}
+
+const NAV: NavItem[] = [
+  { path: '/admin/dashboard',                     label: "Vue d'ensemble", icon: '/images/sidebar-icon-dashboard.svg' },
+  { path: '/admin/billetterie',                   label: 'Billetterie',    icon: '/images/sidebar-icon-billetterie.svg' },
+  { path: 'https://www.lamagiedusoir.com/admin',  label: 'Candidats',      icon: '/images/sidebar-icon-candidats.svg', external: true },
+  { path: '/admin/cms',                           label: 'Contenu CMS',    icon: '/images/sidebar-icon-cms.svg' },
+  { path: '/admin/config',                        label: 'Configuration',  icon: '/images/sidebar-icon-config.svg' },
 ];
 
 export default function AdminSidebar() {
@@ -29,6 +36,20 @@ export default function AdminSidebar() {
 
       <nav className="admin-sidebar__nav">
         {NAV.map(item => {
+          if (item.external) {
+            return (
+              <a
+                key={item.path}
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="admin-sidebar__link"
+              >
+                <img src={item.icon} alt="" />
+                <span>{item.label}</span>
+              </a>
+            );
+          }
           const active = pathname === item.path;
           return (
             <Link

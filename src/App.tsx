@@ -7,11 +7,8 @@ import BilletterieConfirmation from './pages/BilletterieConfirmation';
 import Presse from './pages/Presse';
 import Contact from './pages/Contact';
 import Galerie from './pages/Galerie';
-import Candidater from './pages/Candidater';
-import CandidaterConfirmation from './pages/CandidaterConfirmation';
 import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
-import AdminCandidats from './pages/admin/Candidats';
 import AdminBilletterie from './pages/admin/Billetterie';
 import AdminCms from './pages/admin/Cms';
 import AdminConfig from './pages/admin/Config';
@@ -38,22 +35,12 @@ const App = () => {
       <Route path="/presse" element={<Presse />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/galerie" element={<Galerie />} />
-      <Route path="/candidater" element={<Candidater />} />
-      <Route path="/candidater/confirmation" element={<CandidaterConfirmation />} />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route
         path="/admin/dashboard"
         element={
           <ProtectedAdminRoute>
             <AdminDashboard />
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/candidats"
-        element={
-          <ProtectedAdminRoute>
-            <AdminCandidats />
           </ProtectedAdminRoute>
         }
       />
