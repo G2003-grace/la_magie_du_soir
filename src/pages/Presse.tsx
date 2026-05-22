@@ -1,5 +1,5 @@
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import FooterPresse from '../components/layout/FooterPresse';
 
 const THUMBNAILS = [
   { image: '/images/press-thumb-backstage.jpg', title: "Highlights de l'édition 2025",    subtitle: 'Atmosphère & Public' },
@@ -10,7 +10,7 @@ const THUMBNAILS = [
 const RELEASES = [
   {
     date: '15 mars 2026',
-    title: "Lancement de la billetterie « Carré d'Or » : une demande record pour 2026.",
+    title: "Lancement de la billetterie \"Carré d'Or\" : une demande record pour 2026.",
     text: "Le comité d'organisation annonce une ouverture exceptionnelle des réservations. Face à l'engouement suscité par le nouveau thème nocturne, les places limitées s'envolent...",
   },
   {
@@ -21,10 +21,10 @@ const RELEASES = [
 ];
 
 const PHOTOS = [
-  { image: '/images/press-photo-fashion.png',   tag: 'Texture',     name: 'Éclat Doré',        id: 'IMG_882', offset: false },
-  { image: '/images/press-photo-entrance.png',  tag: 'Event',       name: "Le Tapis d'Or",     id: 'IMG_431', offset: true  },
-  { image: '/images/press-photo-champagne.png', tag: 'Service',     name: 'Excellence',        id: 'IMG_092', offset: false },
-  { image: '/images/press-photo-orchestra.png', tag: 'Performance', name: 'Symphonie du Soir', id: 'IMG_115', offset: true  },
+  { image: '/images/press-photo-fashion.png',   name: 'Éclat Doré',        id: '882', offset: false },
+  { image: '/images/press-photo-entrance.png',  name: "Le Tapis d'Or",     id: '431', offset: true  },
+  { image: '/images/press-photo-champagne.png', name: 'Excellence',        id: '092', offset: false },
+  { image: '/images/press-photo-orchestra.png', name: 'Symphonie du Soir', id: '115', offset: true  },
 ];
 
 export default function Presse() {
@@ -160,8 +160,7 @@ export default function Presse() {
               >
                 <img src={p.image} alt={p.name} />
                 <figcaption className="gallery-photo__caption">
-                  <span className="gallery-photo__tag">{p.tag}</span>
-                  <span className="gallery-photo__name">{p.name} — {p.id}</span>
+                  <span className="gallery-photo__name">{p.name} | {p.id}</span>
                 </figcaption>
               </figure>
             ))}
@@ -229,7 +228,7 @@ export default function Presse() {
         </section>
       </main>
 
-      <Footer />
+      <FooterPresse />
     </>
   );
 }

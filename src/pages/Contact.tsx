@@ -1,5 +1,5 @@
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import FooterContact from '../components/layout/FooterContact';
 
 const CONTACT_CARDS = [
   {
@@ -88,7 +88,7 @@ export default function Contact() {
                   <img src="/images/icon-share-card.svg" alt="" />
                 </a>
                 <a href="#" className="contact-social__btn" aria-label="Plus">
-                  <img src="/images/icon-settings-card.svg" alt="" />
+                  <img src="/images/icon-sparkle.svg" alt="" />
                 </a>
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function Contact() {
         </div>
       </main>
 
-      <Footer />
+      <FooterContact />
     </>
   );
 }

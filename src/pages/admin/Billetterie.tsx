@@ -85,6 +85,7 @@ function ArrowUpIcon() {
       <polyline points="5 12 12 5 19 12" />
     </svg>
   );
+  
 }
 function StarIcon() {
   return (

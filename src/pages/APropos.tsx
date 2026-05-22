@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import SiteFooter from '../components/layout/SiteFooter';
 import { useCms } from '../context/CmsContext';
 
 const VALUES = [
@@ -171,7 +171,7 @@ export default function APropos() {
         </section>
       </main>
 
-      <Footer />
+      <SiteFooter />
     </>
   );
 }

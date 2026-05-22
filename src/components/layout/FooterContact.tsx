@@ -7,9 +7,9 @@ const LEGAL_LINKS = [
   { label: 'Accès Presse',     to: '/presse'           },
 ];
 
-export default function Footer() {
+export default function FooterContact() {
   return (
-    <footer className="footer footer--default">
+    <footer className="footer footer--contact">
       <div className="footer__brand">La Magie du Soir</div>
 
       <nav className="footer__links">

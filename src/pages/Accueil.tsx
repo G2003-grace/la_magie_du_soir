@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import FooterAccueil from '../components/layout/FooterAccueil';
 import { useCms } from '../context/CmsContext';
 
 export default function Accueil() {
@@ -165,7 +165,7 @@ export default function Accueil() {
         </section>
       </main>
 
-      <Footer />
+      <FooterAccueil />
     </>
   );
 }

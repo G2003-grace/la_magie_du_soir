@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import SiteFooter from '../components/layout/SiteFooter';
 
 const SCHEDULE = [
   {
@@ -163,15 +163,6 @@ export default function Programme() {
                   réunies pour célébrer l'excellence et l'innovation.
                 </p>
               </div>
-
-              <div className="jury__nav">
-                <button type="button" className="jury__nav-btn" aria-label="Précédent">
-                  <img src="/images/icon-arrow-left.svg" alt="" />
-                </button>
-                <button type="button" className="jury__nav-btn" aria-label="Suivant">
-                  <img src="/images/icon-arrow-right.svg" alt="" />
-                </button>
-              </div>
             </header>
 
             <div className="jury__grid">
@@ -189,7 +180,7 @@ export default function Programme() {
         </section>
       </main>
 
-      <Footer />
+      <SiteFooter />
     </>
   );
 }

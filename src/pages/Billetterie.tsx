@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
-import Footer from '../components/layout/Footer';
+import FooterBilletterie from '../components/layout/FooterBilletterie';
 
 type TicketKey = 'standard' | 'vip' | 'prestige';
 type PaymentKey = 'mtn' | 'moov' | 'visa';
@@ -327,7 +327,7 @@ export default function Billetterie() {
         </section>
       </main>
 
-      <Footer />
+      <FooterBilletterie />
     </>
   );
 }

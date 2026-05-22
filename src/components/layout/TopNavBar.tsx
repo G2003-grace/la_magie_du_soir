@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { path: '/billetterie', label: 'Billetterie' },
   { path: '/presse',      label: 'Presse' },
   { path: '/contact',     label: 'Contact' },
+  { path: '/admin/login', label: 'Admin' },
 ];
 
 export default function TopNavBar() {
@@ -30,7 +31,6 @@ export default function TopNavBar() {
         </nav>
 
         <div className="topnav__cta">
-          <Link to="/admin/login" className="topnav__admin">Admin</Link>
           <Link to="/billetterie" className="btn-primary">Réserver</Link>
         </div>
       </div>
