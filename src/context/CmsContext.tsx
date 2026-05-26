@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 const STORAGE_KEY = 'lmds.cms';
+const LEGACY_SLOGAN = "Une nuit où le temps s'arrête, et la magie commence.";
+const LEGACY_ABOUT = "Fondé en 1992, le gala célèbre l'élégance et l'art de vivre à la française...";
 
 export interface CmsMedia {
   id: string;
@@ -31,9 +33,9 @@ const DEFAULT_DOCUMENTS: CmsDocument[] = [
 ];
 
 const DEFAULTS = {
-  slogan: "Une nuit où le temps s'arrête, et la magie commence.",
+  slogan: "Une nuit où l'imaginaire africain sublime la scène mondiale.",
   aboutDescription:
-    "Fondé en 1992, le gala célèbre l'élégance et l'art de vivre à la française...",
+    "Célébrer l'excellence, magnifier l'héritage et projeter l'Afrique vers les sommets de l'art mondial.",
   medias: DEFAULT_MEDIAS,
   documents: DEFAULT_DOCUMENTS,
 };
@@ -57,7 +59,10 @@ function readStored(): CmsContent {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULTS;
     const parsed = JSON.parse(raw) as Partial<CmsContent>;
-    return { ...DEFAULTS, ...parsed };
+    const merged = { ...DEFAULTS, ...parsed };
+    if (merged.slogan === LEGACY_SLOGAN) merged.slogan = DEFAULTS.slogan;
+    if (merged.aboutDescription === LEGACY_ABOUT) merged.aboutDescription = DEFAULTS.aboutDescription;
+    return merged;
   } catch {
     return DEFAULTS;
   }

@@ -35,8 +35,8 @@ export default function FooterAccueil() {
         <a href="#" className="footer__social" aria-label="Partager">
           <img src="/images/icon-share.svg" alt="" />
         </a>
-        <a href="mailto:contact@lamagiedusoir.fr" className="footer__social" aria-label="Contact email">
-          <img src="/images/icon-mail.svg" alt="" />
+        <a href="mailto:contact@lamagiedusoir.fr" className="footer__social" aria-label="Envoyer un message">
+          <img src="/images/icon-message.svg" alt="" />
         </a>
       </div>
     </footer>
