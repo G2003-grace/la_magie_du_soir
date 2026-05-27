@@ -229,6 +229,36 @@ button { cursor: pointer; font-family: inherit; border: none; }
     rgba(120, 53, 15, 0) 100%
   );
 }
+.topnav__toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--border-gold-lg, rgba(120, 53, 15, 0.4));
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+.topnav__toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--gold-brand);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.topnav__toggle--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.topnav__toggle--open span:nth-child(2) {
+  opacity: 0;
+}
+.topnav__toggle--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 /* ─── FOOTER ─────────────────────────────────────────────── */
 .footer {
@@ -311,8 +341,32 @@ button { cursor: pointer; font-family: inherit; border: none; }
 
 /* Responsive TopNavBar + Footer */
 @media (max-width: 900px) {
-  .topnav__inner { flex-wrap: wrap; gap: 16px; }
-  .topnav__links { order: 3; width: 100%; justify-content: center; gap: 20px; }
+  .topnav__inner { flex-wrap: wrap; gap: 16px; padding: 16px 20px; }
+  .topnav__toggle { display: flex; order: 2; }
+  .topnav__cta { order: 3; }
+  .topnav__links {
+    order: 4;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+  }
+  .topnav__links--open {
+    max-height: 500px;
+    opacity: 1;
+    padding-top: 8px;
+  }
+  .topnav__links .topnav__link {
+    padding: 14px 8px;
+    border-bottom: 1px solid rgba(120, 53, 15, 0.15);
+  }
+  .topnav__links .topnav__link--active {
+    border-bottom-color: var(--gold-active);
+  }
   .footer { flex-direction: column; align-items: flex-start; padding: 48px 24px; gap: 16px; }
   .footer__links { justify-content: flex-start; }
   .footer--contact .footer__copyright { text-align: left; }
