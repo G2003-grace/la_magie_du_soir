@@ -87,7 +87,7 @@ export default function APropos() {
 
             <figure className="genese__portrait">
               <div className="genese__portrait-frame">
-                <img src="/images/founder-portrait.png" alt="Portrait du fondateur" />
+                <img src="/images/im.jpg" alt="Portrait du fondateur" />
               </div>
               <figcaption className="genese__overlay">
                 <span className="genese__overlay-label">Inspiration</span>
