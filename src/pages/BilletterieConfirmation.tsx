@@ -1,13 +1,11 @@
+import { useEffect, useState } from 'react';
 import { useLocation, Navigate, Link } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
 import Footer from '../components/layout/Footer';
+import { checkPayment } from '../lib/fedapay';
+import type { PaymentStatusResult } from '../lib/fedapay';
 
-interface OrderState {
-  ticket: { key: string; label: string; name: string; price: number };
-  payment: { key: string; label: string };
-  customer: { prenom: string; nom: string; email: string; telephone: string };
-  total: number;
-}
+type Phase = 'checking' | 'accepted' | 'pending' | 'failed' | 'error';
 
 function SuccessIcon() {
   return (
@@ -69,18 +67,134 @@ function QRPlaceholder({ seed }: { seed: string }) {
 
 export default function BilletterieConfirmation() {
   const location = useLocation();
-  const state = location.state as OrderState | null;
+  const transactionId = (location.state as { transactionId?: string } | null)?.transactionId;
 
-  if (!state || !state.ticket) {
+  const [phase, setPhase] = useState<Phase>('checking');
+  const [order, setOrder] = useState<PaymentStatusResult | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    if (!transactionId) return;
+
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let attempts = 0;
+
+    const poll = async () => {
+      try {
+        const res = await checkPayment(transactionId);
+        if (cancelled) return;
+
+        if (res.status === 'ACCEPTED') {
+          setOrder(res);
+          setPhase('accepted');
+          return;
+        }
+        if (res.status === 'REFUSED') {
+          setPhase('failed');
+          return;
+        }
+        // PENDING / UNKNOWN : le webhook peut tarder, on réessaie quelques fois.
+        attempts += 1;
+        if (attempts >= 6) {
+          setPhase(res.status === 'UNKNOWN' ? 'error' : 'pending');
+          return;
+        }
+        timer = setTimeout(poll, 3000);
+      } catch (e) {
+        if (cancelled) return;
+        setErrorMsg(e instanceof Error ? e.message : String(e));
+        setPhase('error');
+      }
+    };
+
+    setPhase('checking');
+    poll();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [transactionId, reloadKey]);
+
+  // Accès direct à la page sans commande en cours.
+  if (!transactionId) {
     return <Navigate to="/billetterie" replace />;
   }
 
-  const { ticket, payment, customer, total } = state;
-  const ticketId = `LMDS-2026-${(
-    Math.abs(
-      [...customer.email + customer.prenom].reduce((a, c) => a + c.charCodeAt(0), 0),
-    ) % 900000 + 100000
-  )}`;
+  if (phase === 'checking') {
+    return (
+      <>
+        <TopNavBar />
+        <main className="confirmation">
+          <header className="confirmation__header">
+            <h1 className="confirmation__title">Vérification de votre paiement…</h1>
+            <p className="confirmation__subtitle">
+              Merci de patienter quelques instants pendant la confirmation auprès de FedaPay.
+            </p>
+          </header>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  if (phase !== 'accepted' || !order) {
+    const messages: Record<string, { title: string; subtitle: string }> = {
+      pending: {
+        title: 'Paiement en cours de validation',
+        subtitle:
+          "Votre paiement n'est pas encore confirmé. Si vous venez de valider sur votre téléphone, la confirmation peut prendre quelques instants.",
+      },
+      failed: {
+        title: 'Paiement non abouti',
+        subtitle:
+          "La transaction n'a pas été confirmée. Aucun montant validé n'a été retenu. Vous pouvez réessayer.",
+      },
+      error: {
+        title: 'Vérification impossible',
+        subtitle: errorMsg || "Nous n'avons pas pu vérifier votre paiement pour le moment.",
+      },
+    };
+    const m = messages[phase] ?? messages.error;
+
+    return (
+      <>
+        <TopNavBar />
+        <main className="confirmation">
+          <header className="confirmation__header">
+            <h1 className="confirmation__title">{m.title}</h1>
+            <p className="confirmation__subtitle">{m.subtitle}</p>
+          </header>
+          <div className="confirmation__actions">
+            {phase === 'pending' || phase === 'error' ? (
+              <button
+                type="button"
+                className="confirmation__btn confirmation__btn--primary"
+                onClick={() => setReloadKey(k => k + 1)}
+              >
+                Vérifier à nouveau
+              </button>
+            ) : (
+              <Link to="/billetterie" className="confirmation__btn confirmation__btn--primary">
+                Réessayer le paiement
+              </Link>
+            )}
+            <Link to="/" className="confirmation__btn confirmation__btn--ghost">
+              Retour à l'accueil
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const ticket = order.ticket!;
+  const customer = order.customer!;
+  const total = order.total ?? ticket.price;
+  const ticketCode = order.ticketCode ?? order.reference ?? transactionId;
 
   return (
     <>
@@ -117,8 +231,14 @@ export default function BilletterieConfirmation() {
               </div>
               <div className="confirmation__item">
                 <dt>Paiement</dt>
-                <dd>{payment.label}</dd>
+                <dd>{order.payment?.label ?? 'FedaPay'}</dd>
               </div>
+              {order.reference && (
+                <div className="confirmation__item">
+                  <dt>Référence</dt>
+                  <dd>{order.reference}</dd>
+                </div>
+              )}
               <div className="confirmation__item confirmation__item--total">
                 <dt>Montant payé</dt>
                 <dd>{total.toLocaleString('fr-FR')} FCFA</dd>
@@ -129,8 +249,8 @@ export default function BilletterieConfirmation() {
           <section className="confirmation__qr-section">
             <h2 className="confirmation__section-title">Votre billet</h2>
             <div className="confirmation__qr-wrap">
-              <QRPlaceholder seed={ticketId} />
-              <span className="confirmation__qr-caption">N° {ticketId}</span>
+              <QRPlaceholder seed={ticketCode} />
+              <span className="confirmation__qr-caption">N° {ticketCode}</span>
             </div>
             <p className="confirmation__hint">
               Présentez ce QR Code à l'entrée de l'événement.

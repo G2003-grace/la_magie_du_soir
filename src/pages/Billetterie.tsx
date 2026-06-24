@@ -3,9 +3,9 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '../components/layout/TopNavBar';
 import FooterBilletterie from '../components/layout/FooterBilletterie';
+import { initiatePayment, openCheckout, FEDAPAY_CANCELLED } from '../lib/fedapay';
 
 type TicketKey = 'standard' | 'vip' | 'prestige';
-type PaymentKey = 'mtn' | 'moov' | 'visa';
 
 interface Ticket {
   key: TicketKey;
@@ -23,40 +23,42 @@ const TICKETS: Ticket[] = [
     label: 'Classique',
     name: 'Tribune Standard',
     desc: 'Une immersion complète au cœur du spectacle avec une visibilité optimale sur la scène principale.',
-    features: ['Accès cérémonie', 'Placement libre', 'Cocktail de bienvenue'],
-    price: 45000,
+    features: ['Accès cérémonie', 'Placement libre', ],
+    price: 2000,
   },
   {
     key: 'vip',
     label: 'Prestige',
     name: 'Tribune VIP',
-    desc: "Le luxe du confort et une vue imprenable, accompagnés d'un service de boissons à discrétion.",
-    features: ['Sièges rembourrés', 'Open bar premium', 'Accès coupe-file', 'Goodie bag exclusif'],
-    price: 120000,
+    desc: "Le luxe du confort et une vue imprenable.",
+    features: ['Cocktail de bienvenue', 'Placement pres du podium', ],
+    price: 8000,
     featured: true,
   },
   {
     key: 'prestige',
     label: 'Ultime',
     name: 'Table Prestige',
-    desc: "L'expérience ultime pour les groupes. Une table privée avec service de majordome et dîner gastronomique.",
-    features: ['Table de 6 personnes', 'Dîner gastronomique', 'Majordome dédié'],
-    price: 500000,
+    desc: "L'expérience ultime pour les groupes.",
+    features: [],
+    price: 20000,
   },
 ];
 
-const PAYMENTS: Array<{ key: PaymentKey; label: string; icon: string }> = [
+// Moyens de paiement acceptés dans la fenêtre FedaPay (affichage uniquement).
+const ACCEPTED_METHODS: Array<{ key: string; label: string; icon: string }> = [
   { key: 'mtn',  label: 'MTN Money',  icon: '/images/icon-mtn.svg' },
   { key: 'moov', label: 'Moov Money', icon: '/images/icon-moov.svg' },
-  { key: 'visa', label: 'Carte Visa', icon: '/images/icon-visa.svg' },
+  { key: 'visa', label: 'Carte',      icon: '/images/icon-visa.svg' },
 ];
 
 export default function Billetterie() {
   const navigate = useNavigate();
   const [selectedTicket, setSelectedTicket] = useState<TicketKey | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentKey>('visa');
   const [formData, setFormData] = useState({ prenom: '', nom: '', email: '', telephone: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [processing, setProcessing] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
 
   const total = selectedTicket ? TICKETS.find(t => t.key === selectedTicket)!.price : 0;
 
@@ -81,8 +83,10 @@ export default function Billetterie() {
     clearError(name);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setPayError(null);
+
     const errs: Record<string, string> = {};
     if (!selectedTicket) errs.ticket = 'Veuillez sélectionner un billet.';
     if (!formData.prenom.trim()) errs.prenom = 'Prénom requis';
@@ -94,17 +98,40 @@ export default function Billetterie() {
 
     setErrors(errs);
 
-    if (Object.keys(errs).length === 0) {
-      navigate('/billetterie/confirmation', {
-        state: {
-          ticket: TICKETS.find(t => t.key === selectedTicket),
-          payment: PAYMENTS.find(p => p.key === paymentMethod),
-          customer: formData,
-          total,
-        },
+    if (Object.keys(errs).length > 0) {
+      if (errs.ticket) {
+        document.getElementById('tickets')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    const ticket = TICKETS.find(t => t.key === selectedTicket)!;
+
+    setProcessing(true);
+    try {
+      // 1) Création de la transaction côté serveur (clé secrète protégée).
+      const { transactionId, fedapayId } = await initiatePayment({
+        ticketKey: ticket.key,
+        ticketName: ticket.name,
+        ticketLabel: ticket.label,
+        amount: total,
+        customer: formData,
+        returnUrl: `${window.location.origin}/billetterie/confirmation`,
       });
-    } else if (errs.ticket) {
-      document.getElementById('tickets')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // 2) Ouverture de la fenêtre de paiement FedaPay (clé publique).
+      await openCheckout(fedapayId);
+
+      // 3) La page de confirmation re-vérifie le statut réel avant d'émettre le billet.
+      navigate('/billetterie/confirmation', { state: { transactionId } });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      // L'utilisateur a simplement fermé la fenêtre de paiement : pas d'erreur affichée.
+      if (message !== FEDAPAY_CANCELLED) {
+        setPayError(message);
+      }
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -285,25 +312,18 @@ export default function Billetterie() {
             </fieldset>
 
             <fieldset className="form__section">
-              <legend className="form__legend">Méthode de paiement</legend>
+              <legend className="form__legend">Paiement sécurisé via FedaPay</legend>
+              <p className="form__payments-note">
+                Le règlement s'effectue dans la fenêtre sécurisée FedaPay. Choisissez
+                MTN Money, Moov Money ou votre carte bancaire à l'étape suivante.
+              </p>
               <div className="form__payments">
-                {PAYMENTS.map(p => {
-                  const active = paymentMethod === p.key;
-                  return (
-                    <label key={p.key} className={`payment ${active ? 'payment--active' : ''}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value={p.key}
-                        checked={active}
-                        onChange={() => setPaymentMethod(p.key)}
-                        className="payment__radio"
-                      />
-                      <img src={p.icon} alt="" className="payment__icon" />
-                      <span className="payment__label">{p.label}</span>
-                    </label>
-                  );
-                })}
+                {ACCEPTED_METHODS.map(p => (
+                  <div key={p.key} className="payment">
+                    <img src={p.icon} alt="" className="payment__icon" />
+                    <span className="payment__label">{p.label}</span>
+                  </div>
+                ))}
               </div>
             </fieldset>
 
@@ -315,8 +335,10 @@ export default function Billetterie() {
                 </span>
               </div>
 
-              <button type="submit" className="form__submit">
-                Confirmer l'achat
+              {payError && <p className="form__error form__error--submit">{payError}</p>}
+
+              <button type="submit" className="form__submit" disabled={processing}>
+                {processing ? 'Paiement en cours…' : 'Payer avec FedaPay'}
               </button>
 
               <p className="form__terms">

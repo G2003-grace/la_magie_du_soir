@@ -69,7 +69,7 @@ export default function APropos() {
               <p>
                 Né de la volonté de créer un écrin à la démesure du talent africain,{' '}
                 <span className="genese__highlight">La Magie du Soir</span> a vu le
-                jour en 2018. Ce qui n'était alors qu'un rêve d'union entre tradition
+                jour en 2025. Ce qui n'était alors qu'un rêve d'union entre tradition
                 et modernité est devenu le rendez-vous incontournable de l'élite
                 artistique et culturelle du continent.
               </p>
@@ -99,26 +99,8 @@ export default function APropos() {
           </div>
         </section>
 
-        {/* ─── IMPACT EN CHIFFRES ──────────────────────────── */}
-        <section className="stats">
-          <div className="stats__container">
-            <header className="stats__header">
-              <h2 className="stats__title">L'Impact en Chiffres</h2>
-              <div className="stats__divider" />
-            </header>
-
-            <div className="stats__grid">
-              {STATS.map(s => (
-                <article key={s.label} className="stats__card">
-                  <div className="stats__value">{s.value}</div>
-                  <div className="stats__label">{s.label}</div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ─── MISSION & VALEURS ───────────────────────────── */}
+       
+        
         <section className="values">
           <div className="values__grid">
             {VALUES.map(v => (

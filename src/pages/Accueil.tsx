@@ -119,7 +119,7 @@ export default function Accueil() {
 
           <div className="souvenirs__container">
             <header className="souvenirs__header">
-              <h2 className="section-title souvenirs__title">Souvenirs d'Excellence</h2>
+              <h2 className="section-title souvenirs__title">Notre vision</h2>
               <div className="section-divider" />
             </header>
 

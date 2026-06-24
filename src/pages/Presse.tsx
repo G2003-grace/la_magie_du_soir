@@ -22,8 +22,7 @@ const RELEASES = [
 
 const PHOTOS = [
   { image: '/images/press-photo-fashion.png',   name: 'Éclat Doré',        id: '882', offset: false },
-  { image: '/images/press-photo-entrance.png',  name: "Le Tapis d'Or",     id: '431', offset: true  },
-  { image: '/images/press-photo-champagne.png', name: 'Excellence',        id: '092', offset: false },
+ 
   { image: '/images/press-photo-orchestra.png', name: 'Symphonie du Soir', id: '115', offset: true  },
 ];
 

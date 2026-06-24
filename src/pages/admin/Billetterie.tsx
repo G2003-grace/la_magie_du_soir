@@ -257,7 +257,7 @@ export default function Billetterie() {
         </div>
       </section>
 
-      {/* ─── INLINE BOTTOM FOOTER (fidèle Figma) ─── */}
+      
       <footer className="billetterie-footer">
         <span>© 2026 La Magie du Soir — Système de gestion de billetterie</span>
         <nav>

@@ -4,24 +4,55 @@ import SiteFooter from '../components/layout/SiteFooter';
 
 const SCHEDULE = [
   {
-    time: '19:30',
-    title: 'Accueil & tapis rouge',
-    desc: "Cocktail de bienvenue servi dans le Grand Foyer, musique d'ambiance par notre quatuor à cordes résident.",
+    time: '18h-19h',
+    title: 'Accueil & Installation',
+    desc: 'Réception des invités'
   },
   {
-    time: '20:30',
-    title: 'Ouverture du gala',
-    desc: 'Levée de rideau et discours inaugural de la Présidence, suivi de la première performance immersive.',
+    time: '19h-19h30',
+    title: 'Ouverture officielle',
+    desc: 'Mot du promoteur Josué AHOUANSO, présentation du concept                   ',
   },
   {
-    time: '21:15',
-    title: 'Dîner de gala & remise de prix',
-    desc: 'Menu gastronomique en 5 services. Interludes artistiques et dévoilement des lauréats 2026.',
+    time: '19h30-20h30',
+    title: '1ère partie artistique ',
+    desc: 'Chant, slam, danse traditionnelle, artsplastiques en direct',
+
   },
   {
-    time: '23:45',
-    title: 'Bal de clôture',
-    desc: 'Soirée dansante sous la coupole de cristal avec performance exclusive de notre DJ international.',
+    time: '20h30-21h',
+    title: 'Défilé de mode',
+    desc: 'Présentation des créations des stylistes participants',
+
+  },
+  {
+    time: '21h-21h30',
+    title: 'Entracte culturel',
+    desc: 'Exposition des œuvres, échanges entre artistes et public',
+
+  },
+   {
+    time: '21h30-22h30',
+    title: '2ème partie artistique ',
+    desc: 'Théâtre, musique, danse contemporaine,performances feu',
+
+
+  },
+   {
+    time: '22h30-23h',
+    title: 'Remise des trophées  ',
+    desc: 'Récompense des meilleures prestations par catégorie',
+
+
+
+  },
+   {
+    time: '23h',
+    title: 'Clôture festive ',
+    desc: 'Animation musicale finale, networking ',
+
+
+
   },
 ];
 
@@ -103,7 +134,7 @@ export default function Programme() {
 
             <figure className="programme-hero__poster-wrap">
               <div className="programme-hero__poster-glow" aria-hidden="true" />
-              <img src="/images/poster-affiche.png" alt="Affiche officielle La Magie du Soir 2026" className="programme-hero__poster" />
+              <img src="/images/gallery-scene.png" alt="Affiche officielle La Magie du Soir 2026" className="programme-hero__poster" />
             </figure>
           </div>
         </section>
