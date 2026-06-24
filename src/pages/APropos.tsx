@@ -33,12 +33,6 @@ const TEAM = [
   { photo: '/images/team-david.png',    name: 'David Mensah',     role: 'Directeur de production' },
 ];
 
-const STATS = [
-  { value: '12',    label: 'Éditions prévues' },
-  { value: '2500+', label: "Invités d'honneur" },
-  { value: '45',    label: 'Artistes récompensés' },
-];
-
 export default function APropos() {
   const { aboutDescription } = useCms();
   return (
