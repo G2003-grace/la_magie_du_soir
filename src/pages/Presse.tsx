@@ -1,8 +1,8 @@
 import TopNavBar from '../components/layout/TopNavBar';
 import FooterPresse from '../components/layout/FooterPresse';
 
-const THUMBNAILS = [
-  { image: '/images/press-thumb-backstage.jpg', title: "Highlights de l'édition 2025",    subtitle: 'Atmosphère & Public' },
+const THUMBNAILS: Array<{ image: string; title: string; subtitle: string; url?: string }> = [
+  { image: '/images/press-thumb-backstage.jpg', title: "Highlights de l'édition 2025",    subtitle: 'Atmosphère & Public', url: 'https://www.facebook.com/share/v/1DkmTk28fm/' },
   { image: '/images/press-thumb-interview.jpg', title: 'Les coulisses de la création',    subtitle: 'Scénographie & Décors' },
   { image: '/images/press-thumb-live.jpg',      title: 'Dévoilement du Line-up',          subtitle: 'Annonces Officielles' },
 ];
@@ -68,20 +68,37 @@ export default function Presse() {
           </div>
 
           <div className="presse-video__thumbs">
-            {THUMBNAILS.map(t => (
-              <button type="button" key={t.title} className="video-thumb">
-                <div className="video-thumb__img">
-                  <img src={t.image} alt="" />
-                  <div className="video-thumb__overlay" aria-hidden="true">
-                    <img src="/images/icon-play-small.svg" alt="" />
+            {THUMBNAILS.map(t => {
+              const inner = (
+                <>
+                  <div className="video-thumb__img">
+                    <img src={t.image} alt="" />
+                    <div className="video-thumb__overlay" aria-hidden="true">
+                      <img src="/images/icon-play-small.svg" alt="" />
+                    </div>
                   </div>
-                </div>
-                <div className="video-thumb__body">
-                  <h4>{t.title}</h4>
-                  <p>{t.subtitle}</p>
-                </div>
-              </button>
-            ))}
+                  <div className="video-thumb__body">
+                    <h4>{t.title}</h4>
+                    <p>{t.subtitle}</p>
+                  </div>
+                </>
+              );
+              return t.url ? (
+                <a
+                  key={t.title}
+                  href={t.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="video-thumb"
+                >
+                  {inner}
+                </a>
+              ) : (
+                <button type="button" key={t.title} className="video-thumb">
+                  {inner}
+                </button>
+              );
+            })}
           </div>
         </section>
 
