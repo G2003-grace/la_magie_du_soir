@@ -212,8 +212,8 @@ export default function Presse() {
                 </span>
                 <div>
                   <span className="presse-contact__label">Ligne directe</span>
-                  <a href="tel:+33142567890" className="presse-contact__value">
-                    +33 (0)1 42 56 78 90
+                  <a href="tel:+22997509642" className="presse-contact__value">
+                    +229 97 50 96 42
                   </a>
                 </div>
               </li>

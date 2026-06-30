@@ -5,9 +5,9 @@ const CONTACT_CARDS = [
   {
     icon: '/images/icon-phone-card.svg',
     title: 'Relations Publiques',
-    value: '+33 (0) 1 42 68 00 00',
+    value: '+229 97 50 96 42',
     note: 'Disponible 10h — 19h',
-    href: 'tel:+33142680000',
+    href: 'tel:+22997509642',
   },
   {
     icon: '/images/icon-mail-card.svg',

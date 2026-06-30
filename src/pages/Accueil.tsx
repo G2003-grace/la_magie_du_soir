@@ -154,7 +154,7 @@ export default function Accueil() {
               La Magie du Soir.
             </p>
             <a
-              href="https://www.lamagiedusoir.com/"
+              href="https://casting-omega.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="casting-cta__btn"
