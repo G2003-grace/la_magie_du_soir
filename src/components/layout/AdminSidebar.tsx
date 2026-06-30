@@ -11,7 +11,7 @@ interface NavItem {
 const NAV: NavItem[] = [
   { path: '/admin/dashboard',                     label: "Vue d'ensemble", icon: '/images/sidebar-icon-dashboard.svg' },
   { path: '/admin/billetterie',                   label: 'Billetterie',    icon: '/images/sidebar-icon-billetterie.svg' },
-  { path: 'https://www.lamagiedusoir.com/admin',  label: 'Candidats',      icon: '/images/sidebar-icon-candidats.svg', external: true },
+  { path: 'https://casting-omega.vercel.app/admin/dashboard/candidates',  label: 'Candidats',      icon: '/images/sidebar-icon-candidats.svg', external: true },
   { path: '/admin/cms',                           label: 'Contenu CMS',    icon: '/images/sidebar-icon-cms.svg' },
   { path: '/admin/config',                        label: 'Configuration',  icon: '/images/sidebar-icon-config.svg' },
 ];
