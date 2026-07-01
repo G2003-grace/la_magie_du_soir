@@ -32,7 +32,7 @@ const TICKETS: Ticket[] = [
     name: 'Tribune VIP',
     desc: "Le luxe du confort et une vue imprenable.",
     features: ['Cocktail de bienvenue', 'Placement pres du podium', ],
-    price: 300,
+    price: 400,
     featured: true,
   },
   {
