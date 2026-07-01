@@ -24,7 +24,7 @@ const TICKETS: Ticket[] = [
     name: 'Tribune Standard',
     desc: 'Une immersion complète au cœur du spectacle avec une visibilité optimale sur la scène principale.',
     features: ['Accès cérémonie', 'Placement libre', ],
-    price: 2000,
+    price: 20,
   },
   {
     key: 'vip',
