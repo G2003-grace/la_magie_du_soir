@@ -7,10 +7,10 @@ const LINKS = [
   { label: 'FAQ',              to: '/faq' },
 ];
 
-export default function SiteFooter() {
+export default function SiteFooter({ showBrand = true }: { showBrand?: boolean }) {
   return (
     <footer className="site-footer">
-      <div className="site-footer__brand">Gala de Prestige</div>
+      {showBrand && <div className="site-footer__brand">Gala de Prestige</div>}
 
       <nav className="site-footer__links">
         {LINKS.map(link => (

@@ -209,7 +209,7 @@ export default function Programme() {
         </section>
       </main>
 
-      <SiteFooter />
+      <SiteFooter showBrand={false} />
     </>
   );
 }

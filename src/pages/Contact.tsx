@@ -71,13 +71,13 @@ export default function Contact() {
 
             <div className="contact-map">
               <header className="contact-map__head">
-                <h3 className="contact-map__venue">Le Palais des Beaux-Arts</h3>
-                <span className="contact-map__city">Lille, France</span>
+                <h3 className="contact-map__venue">Père Aupiais</h3>
+                <span className="contact-map__city">Cotonou, Bénin</span>
               </header>
               <div className="contact-map__image">
-                <img src="/images/contact-map.png" alt="Carte du Palais des Beaux-Arts à Lille" />
+                <img src="/images/impe.jpg" alt="Père Aupiais à Cotonou" />
               </div>
-              <p className="contact-map__address">Place de la République, 59000 Lille</p>
+              <p className="contact-map__address">9C54+93H, Cotonou</p>
             </div>
 
             <div className="contact-social">
