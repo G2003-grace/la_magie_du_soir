@@ -209,7 +209,10 @@ export default function Programme() {
         </section>
       </main>
 
-      <SiteFooter showBrand={false} />
+      <SiteFooter
+        brand="La Magie du Soir"
+        copyright="© 2026 La Magie du Soir. L'excellence d'une nuit éternelle."
+      />
     </>
   );
 }

@@ -7,10 +7,13 @@ const LINKS = [
   { label: 'FAQ',              to: '/faq' },
 ];
 
-export default function SiteFooter({ showBrand = true }: { showBrand?: boolean }) {
+export default function SiteFooter({
+  brand = 'Gala de Prestige',
+  copyright = '© 2024 Gala de Prestige. Tous droits réservés.',
+}: { brand?: string; copyright?: string }) {
   return (
     <footer className="site-footer">
-      {showBrand && <div className="site-footer__brand">Gala de Prestige</div>}
+      <div className="site-footer__brand">{brand}</div>
 
       <nav className="site-footer__links">
         {LINKS.map(link => (
@@ -21,7 +24,7 @@ export default function SiteFooter({ showBrand = true }: { showBrand?: boolean }
       </nav>
 
       <div className="site-footer__copyright">
-        © 2024 Gala de Prestige. Tous droits réservés.
+        {copyright}
       </div>
     </footer>
   );
