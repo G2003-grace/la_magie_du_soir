@@ -202,8 +202,6 @@ export default function Programme() {
                   <div className="jury__photo">
                     <img src={j.photo} alt={j.name} />
                   </div>
-                  <h3 className="jury__name">{j.name}</h3>
-                  <span className="jury__role">{j.role}</span>
                 </article>
               ))}
             </div>

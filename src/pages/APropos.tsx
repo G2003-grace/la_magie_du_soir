@@ -127,8 +127,6 @@ export default function APropos() {
                   <div className="team__photo">
                     <img src={m.photo} alt={m.name} />
                   </div>
-                  <h3 className="team__name">{m.name}</h3>
-                  <span className="team__role">{m.role}</span>
                 </article>
               ))}
             </div>

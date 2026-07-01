@@ -8,13 +8,22 @@ type FilterKey = 'all' | 'edition' | 'videos';
 const FILTERS: Array<{ key: FilterKey; label: string }> = [
   { key: 'all',     label: 'Tout voir' },
   { key: 'edition', label: 'Édition 2025' },
-  { key: 'videos',  label: 'Vidéos' },
+];
+
+const GALERIE_IMAGES = [
+  '/images/imgal.jpg', '/images/imgal2.jpg', '/images/imgal3.jpg', '/images/imgal4.jpg',
+  '/images/imgal5.jpg', '/images/imgal6.jpg', '/images/imgal7.jpg', '/images/imgal8.jpg',
 ];
 
 export default function Galerie() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>('all');
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const { medias } = useCms();
   const userMedias = medias.filter((m) => !m.id.startsWith('seed-'));
+
+  // « Édition 2025 » n'affiche que les nouvelles images ajoutées ; « Tout voir »
+  // affiche l'ensemble de la galerie.
+  const showAll = activeFilter === 'all';
 
   return (
     <>
@@ -59,59 +68,62 @@ export default function Galerie() {
         {/* ─── BENTO GRID ─── */}
         <section className="galerie-grid-wrap">
           <div className="galerie-grid">
-            {/* Feature — L'Ouverture Céleste */}
-            <figure className="galerie-item galerie-item--feature">
-              <img src="/images/gallery-feature-chandelier.png" alt="L'Ouverture Céleste" />
-              <div className="galerie-item__gradient" aria-hidden="true" />
-              <figcaption className="galerie-item__caption">
-                <span className="galerie-item__category">Spectacle</span>
-                <h3 className="galerie-item__title">L'Ouverture Céleste</h3>
-              </figcaption>
-              <button
-                type="button"
-                className="galerie-item__expand"
-                aria-label="Agrandir l'image"
+            {showAll && (
+              <>
+                {/* Standard — Cocktails */}
+                <figure
+                  className="galerie-item galerie-item--cocktails"
+                  onClick={() => setLightbox('/images/gallery-cocktails.png')}
+                >
+                  <img src="/images/gallery-cocktails.png" alt="Cocktails de prestige" />
+                  <div className="galerie-item__hover-overlay" aria-hidden="true">
+                    <span>Voir plus</span>
+                  </div>
+                </figure>
+
+                {/* Standard — Instrument */}
+                <figure
+                  className="galerie-item galerie-item--instrument"
+                  onClick={() => setLightbox('/images/gallery-instrument.png')}
+                >
+                  <img src="/images/gallery-instrument.png" alt="Performance musicale" />
+                  <div className="galerie-item__hover-overlay" aria-hidden="true">
+                    <span>Voir plus</span>
+                  </div>
+                </figure>
+
+                {/* Standard — Table */}
+                <figure
+                  className="galerie-item galerie-item--table"
+                  onClick={() => setLightbox('/images/gallery-table.png')}
+                >
+                  <img src="/images/gallery-table.png" alt="Table dressée" />
+                  <div className="galerie-item__hover-overlay" aria-hidden="true">
+                    <span>Voir plus</span>
+                  </div>
+                </figure>
+              </>
+            )}
+
+            {GALERIE_IMAGES.map((src, i) => (
+              <figure
+                key={`imgal-${i}`}
+                className="galerie-item galerie-item--user"
+                onClick={() => setLightbox(src)}
               >
-                <img src="/images/icon-expand.svg" alt="" />
-              </button>
-            </figure>
+                <img src={src} alt={`Galerie ${i + 1}`} />
+                <div className="galerie-item__hover-overlay" aria-hidden="true">
+                  <span>Voir plus</span>
+                </div>
+              </figure>
+            ))}
 
-            {/* Standard — Cocktails */}
-            <figure className="galerie-item galerie-item--cocktails">
-              <img src="/images/gallery-cocktails.png" alt="Cocktails de prestige" />
-              <div className="galerie-item__hover-overlay" aria-hidden="true">
-                <span>Voir plus</span>
-              </div>
-            </figure>
-
-            {/* Vertical — Le Tapis d'Or */}
-            <figure className="galerie-item galerie-item--vertical">
-              <img src="/images/gallery-tapis-or.png" alt="Le Tapis d'Or" />
-              <div className="galerie-item__gradient" aria-hidden="true" />
-              <figcaption className="galerie-item__caption galerie-item__caption--bottom">
-                <h3 className="galerie-item__title galerie-item__title--sm">Le Tapis d'Or</h3>
-                <span className="galerie-item__edition">Édition 2025</span>
-              </figcaption>
-            </figure>
-
-            {/* Standard — Instrument */}
-            <figure className="galerie-item galerie-item--instrument">
-              <img src="/images/gallery-instrument.png" alt="Performance musicale" />
-              <div className="galerie-item__hover-overlay" aria-hidden="true">
-                <span>Voir plus</span>
-              </div>
-            </figure>
-
-            {/* Standard — Table */}
-            <figure className="galerie-item galerie-item--table">
-              <img src="/images/gallery-table.png" alt="Table dressée" />
-              <div className="galerie-item__hover-overlay" aria-hidden="true">
-                <span>Voir plus</span>
-              </div>
-            </figure>
-
-            {userMedias.map((m) => (
-              <figure key={m.id} className="galerie-item galerie-item--user">
+            {showAll && userMedias.map((m) => (
+              <figure
+                key={m.id}
+                className="galerie-item galerie-item--user"
+                onClick={() => setLightbox(m.src)}
+              >
                 <img src={m.src} alt="" />
                 <div className="galerie-item__hover-overlay" aria-hidden="true">
                   <span>Voir plus</span>
@@ -132,6 +144,31 @@ export default function Galerie() {
             </button>
           </div>
         </section>
+
+        {/* ─── LIGHTBOX ─── */}
+        {lightbox && (
+          <div
+            className="galerie-lightbox"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setLightbox(null)}
+          >
+            <button
+              type="button"
+              className="galerie-lightbox__close"
+              aria-label="Fermer"
+              onClick={() => setLightbox(null)}
+            >
+              ×
+            </button>
+            <img
+              className="galerie-lightbox__img"
+              src={lightbox}
+              alt=""
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
       </main>
 
       <Footer />
