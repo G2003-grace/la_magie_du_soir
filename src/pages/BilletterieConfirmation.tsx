@@ -196,6 +196,76 @@ export default function BilletterieConfirmation() {
   const total = order.total ?? ticket.price;
   const ticketCode = order.ticketCode ?? order.reference ?? transactionId;
 
+  const handleDownload = () => {
+    const qrSvg = document.querySelector('.confirmation__qr-svg')?.outerHTML ?? '';
+    const rows: Array<[string, string]> = [
+      ['Billet', `${ticket.name} — ${ticket.label}`],
+      ['Titulaire', `${customer.prenom} ${customer.nom}`],
+      ['Téléphone', customer.telephone],
+      ['Paiement', order.payment?.label ?? 'FedaPay'],
+    ];
+    if (order.reference) rows.push(['Référence', order.reference]);
+    rows.push(['Montant payé', `${total.toLocaleString('fr-FR')} FCFA`]);
+
+    const rowsHtml = rows
+      .map(
+        ([k, v]) =>
+          `<tr><td class="k">${k}</td><td class="v">${v}</td></tr>`,
+      )
+      .join('');
+
+    const html = `<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Billet ${ticketCode} — La Magie du Soir</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; color: #131313; background: #fff; }
+  .ticket { max-width: 640px; margin: 32px auto; border: 2px solid #f7bd48; border-radius: 14px; overflow: hidden; }
+  .ticket__head { background: #131313; color: #f7bd48; text-align: center; padding: 24px 20px; }
+  .ticket__brand { font-size: 22px; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+  .ticket__sub { color: #e5e2e1; font-size: 13px; margin: 6px 0 0; letter-spacing: 1px; }
+  .ticket__body { display: flex; gap: 24px; padding: 24px; align-items: center; flex-wrap: wrap; }
+  .ticket__info { flex: 1 1 300px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 7px 0; font-size: 14px; vertical-align: top; }
+  td.k { color: #6b6b6b; width: 42%; }
+  td.v { font-weight: bold; text-align: right; }
+  .ticket__qr { flex: 0 0 auto; text-align: center; }
+  .ticket__qr svg { width: 170px; height: 170px; border: 1px solid #eee; }
+  .ticket__code { margin-top: 8px; font-size: 12px; letter-spacing: 1px; }
+  .ticket__foot { border-top: 1px dashed #d8b25a; padding: 16px 24px; font-size: 12px; color: #6b6b6b; text-align: center; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } .ticket { margin: 0 auto; } }
+</style>
+</head>
+<body onload="window.print()">
+  <div class="ticket">
+    <div class="ticket__head">
+      <h1 class="ticket__brand">La Magie du Soir</h1>
+      <p class="ticket__sub">Billet électronique — Édition 2026</p>
+    </div>
+    <div class="ticket__body">
+      <div class="ticket__info"><table><tbody>${rowsHtml}</tbody></table></div>
+      <div class="ticket__qr">
+        ${qrSvg}
+        <div class="ticket__code">N° ${ticketCode}</div>
+      </div>
+    </div>
+    <div class="ticket__foot">Présentez ce QR Code à l'entrée de l'événement. Ce billet est nominatif.</div>
+  </div>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank', 'width=760,height=900');
+    if (!win) {
+      alert("Veuillez autoriser les fenêtres pop-up pour télécharger votre billet.");
+      return;
+    }
+    win.document.write(html);
+    win.document.close();
+  };
+
   return (
     <>
       <TopNavBar />
@@ -259,7 +329,11 @@ export default function BilletterieConfirmation() {
         </div>
 
         <div className="confirmation__actions">
-          <button type="button" className="confirmation__btn confirmation__btn--ghost" disabled>
+          <button
+            type="button"
+            className="confirmation__btn confirmation__btn--ghost"
+            onClick={handleDownload}
+          >
             Télécharger mon billet (PDF)
           </button>
           <Link to="/" className="confirmation__btn confirmation__btn--primary">

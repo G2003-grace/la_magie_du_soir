@@ -21,6 +21,8 @@ const REQUIREMENTS = [
   },
 ];
 
+const ADMIN_PASSWORD = 'MAGIE2026';
+
 export default function Login() {
   const navigate = useNavigate();
   const [accessKey, setAccessKey] = useState('');
@@ -30,6 +32,10 @@ export default function Login() {
     e.preventDefault();
     if (!accessKey.trim()) {
       setError("La clé d'accès est requise.");
+      return;
+    }
+    if (accessKey.trim() !== ADMIN_PASSWORD) {
+      setError("Clé d'accès incorrecte.");
       return;
     }
     localStorage.setItem('admin-token', '1');
