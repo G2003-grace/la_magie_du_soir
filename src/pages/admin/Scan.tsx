@@ -60,27 +60,69 @@ export default function Scan() {
 
     lockRef.current = false;
     setError(null);
+
+    // 1) La caméra exige un contexte sécurisé (https ou localhost).
+    if (!window.isSecureContext) {
+      setError(
+        "La caméra n'est disponible qu'en HTTPS. Ouvrez le site via son adresse https:// (pas une IP locale en http), ou utilisez la saisie manuelle ci-dessous.",
+      );
+      return;
+    }
+
     const scanner = new Html5Qrcode(SCANNER_ID);
     scannerRef.current = scanner;
+    let disposed = false;
 
-    scanner
-      .start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 240, height: 240 } },
-        (decoded) => {
-          void handleCode(decoded);
-        },
-        () => {
-          /* erreurs de décodage par image ignorées */
-        },
-      )
-      .catch(() => {
-        setError(
-          "Impossible d'accéder à la caméra. Autorisez l'accès dans le navigateur ou utilisez la saisie manuelle ci-dessous.",
-        );
+    const onDecode = (decoded: string) => {
+      void handleCode(decoded);
+    };
+    const scanConfig = { fps: 10, qrbox: { width: 240, height: 240 } };
+
+    const describeError = (e: unknown): string => {
+      const name = (e as { name?: string })?.name ?? '';
+      const msg = e instanceof Error ? e.message : String(e);
+      if (name === 'NotAllowedError' || /permission|denied/i.test(msg)) {
+        return "Accès caméra refusé. Autorisez la caméra pour ce site (icône caméra dans la barre d'adresse), puis réessayez.";
+      }
+      if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+        return "Aucune caméra utilisable détectée sur cet appareil. Utilisez la saisie manuelle ci-dessous.";
+      }
+      if (name === 'NotReadableError') {
+        return 'La caméra est déjà utilisée par une autre application. Fermez-la puis réessayez.';
+      }
+      return `Impossible d'accéder à la caméra (${name || msg}). Utilisez la saisie manuelle ci-dessous.`;
+    };
+
+    // 2) On choisit une caméra explicitement (arrière si possible), plus fiable
+    //    que facingMode sur certains appareils.
+    Html5Qrcode.getCameras()
+      .then((cameras) => {
+        if (disposed) return;
+        if (!cameras || cameras.length === 0) {
+          setError('Aucune caméra détectée sur cet appareil. Utilisez la saisie manuelle ci-dessous.');
+          return;
+        }
+        const rear =
+          cameras.find((c) => /back|rear|environnement|environment|arrière/i.test(c.label)) ??
+          cameras[cameras.length - 1];
+
+        scanner
+          .start(rear.id, scanConfig, onDecode, () => {})
+          .catch((e) => {
+            // Repli : contrainte facingMode générique.
+            scanner
+              .start({ facingMode: 'environment' }, scanConfig, onDecode, () => {})
+              .catch((e2) => {
+                if (!disposed) setError(describeError(e2 ?? e));
+              });
+          });
+      })
+      .catch((e) => {
+        if (!disposed) setError(describeError(e));
       });
 
     return () => {
+      disposed = true;
       void stopScanner();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
