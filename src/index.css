@@ -2386,6 +2386,15 @@ button { cursor: pointer; font-family: inherit; border: none; }
   padding: 12px;
   background: #fff;
   display: block;
+  width: 200px;
+  height: 200px;
+  box-sizing: content-box;
+  border-radius: 6px;
+}
+.confirmation__qr-svg svg {
+  display: block;
+  width: 100%;
+  height: 100%;
   image-rendering: pixelated;
 }
 .confirmation__qr-caption {
@@ -8211,3 +8220,172 @@ button.cms-docs__dropzone {
   transition: color 160ms ease;
 }
 .candidater-confirmation__btn-link:hover { color: #f7bd48; }
+
+/* ─── ADMIN — CONTRÔLE DES BILLETS (SCANNER) ─── */
+.admin-scan {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 8px 4px 40px;
+}
+.admin-scan__header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.admin-scan__title {
+  font-family: 'Cormorant Garamond', 'Libre Baskerville', serif;
+  font-size: 30px;
+  color: #f4f0ea;
+  margin: 0 0 6px;
+}
+.admin-scan__subtitle {
+  color: #9a938a;
+  font-size: 14px;
+  margin: 0;
+}
+.admin-scan__stage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.admin-scan__stage--center {
+  align-items: center;
+  text-align: center;
+}
+.admin-scan__reader {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 189, 72, 0.35);
+  background: #0c0c0e;
+}
+.admin-scan__reader video {
+  width: 100% !important;
+  display: block;
+}
+.admin-scan__error {
+  color: #e7b4b4;
+  background: rgba(180, 60, 60, 0.12);
+  border: 1px solid rgba(180, 60, 60, 0.4);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  text-align: center;
+}
+.admin-scan__manual {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.admin-scan__manual-label {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #9a938a;
+}
+.admin-scan__manual-row {
+  display: flex;
+  gap: 10px;
+}
+.admin-scan__manual-input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(247, 189, 72, 0.3);
+  background: #131316;
+  color: #f4f0ea;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.admin-scan__manual-input:focus {
+  outline: none;
+  border-color: #f7bd48;
+}
+.admin-scan__checking {
+  color: #f7bd48;
+  font-size: 16px;
+}
+.admin-scan__btn {
+  border: none;
+  cursor: pointer;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: filter 0.2s, background 0.2s;
+}
+.admin-scan__btn--primary {
+  background: #f7bd48;
+  color: #131313;
+}
+.admin-scan__btn--primary:hover {
+  filter: brightness(1.08);
+}
+.admin-scan__verdict {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 24px;
+  border-radius: 16px;
+  border: 2px solid;
+}
+.admin-scan__verdict-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.admin-scan__verdict-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+.admin-scan__verdict-detail {
+  color: #cfc8bd;
+  font-size: 14px;
+}
+.admin-scan__verdict-code {
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #9a938a;
+}
+.admin-scan__verdict--ok {
+  border-color: #4caf7d;
+  background: rgba(76, 175, 125, 0.1);
+}
+.admin-scan__verdict--ok .admin-scan__verdict-icon {
+  background: rgba(76, 175, 125, 0.2);
+  color: #6fdca8;
+}
+.admin-scan__verdict--ok .admin-scan__verdict-title {
+  color: #6fdca8;
+}
+.admin-scan__verdict--ko {
+  border-color: #c8564e;
+  background: rgba(200, 86, 78, 0.1);
+}
+.admin-scan__verdict--ko .admin-scan__verdict-icon {
+  background: rgba(200, 86, 78, 0.2);
+  color: #f0928b;
+}
+.admin-scan__verdict--ko .admin-scan__verdict-title {
+  color: #f0928b;
+}
+.admin-scan__verdict--neutral {
+  border-color: rgba(247, 189, 72, 0.4);
+  background: rgba(247, 189, 72, 0.08);
+}
+.admin-scan__verdict--neutral .admin-scan__verdict-title {
+  color: #f7bd48;
+}

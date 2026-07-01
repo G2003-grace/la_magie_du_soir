@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, Navigate, Link } from 'react-router-dom';
+import QRCode from 'qrcode';
 import TopNavBar from '../components/layout/TopNavBar';
 import Footer from '../components/layout/Footer';
 import { checkPayment } from '../lib/fedapay';
@@ -16,52 +17,37 @@ function SuccessIcon() {
   );
 }
 
-function QRPlaceholder({ seed }: { seed: string }) {
-  const finderPositions: Array<[number, number]> = [
-    [0, 0],
-    [14, 0],
-    [0, 14],
-  ];
+// Vrai QR code (scannable) encodant le code du billet. Le motif est généré par
+// la librairie `qrcode` sous forme de SVG, puis injecté. La classe
+// `confirmation__qr-svg` est conservée pour la génération du PDF.
+function TicketQR({ value }: { value: string }) {
+  const [svg, setSvg] = useState('');
 
-  const seedValue = Array.from(seed).reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const cells: Array<{ x: number; y: number }> = [];
-
-  for (let y = 0; y < 21; y++) {
-    for (let x = 0; x < 21; x++) {
-      const inFinder =
-        (x < 8 && y < 8) ||
-        (x >= 13 && y < 8) ||
-        (x < 8 && y >= 13);
-      if (inFinder) continue;
-      if ((x * 7 + y * 13 + seedValue) % 3 === 0) {
-        cells.push({ x, y });
-      }
-    }
-  }
+  useEffect(() => {
+    let cancelled = false;
+    QRCode.toString(value, {
+      type: 'svg',
+      margin: 1,
+      errorCorrectionLevel: 'M',
+      color: { dark: '#131313', light: '#ffffff' },
+    })
+      .then((str) => {
+        if (!cancelled) setSvg(str);
+      })
+      .catch(() => {
+        if (!cancelled) setSvg('');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [value]);
 
   return (
-    <svg
-      viewBox="0 0 21 21"
-      width="200"
-      height="200"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Billet électronique"
+    <div
       className="confirmation__qr-svg"
-    >
-      <rect width="21" height="21" fill="#fff" />
-      {finderPositions.map(([fx, fy]) => (
-        <g key={`${fx}-${fy}`} transform={`translate(${fx},${fy})`} fill="#131313">
-          <rect x="0" y="0" width="7" height="1" />
-          <rect x="0" y="6" width="7" height="1" />
-          <rect x="0" y="0" width="1" height="7" />
-          <rect x="6" y="0" width="1" height="7" />
-          <rect x="2" y="2" width="3" height="3" />
-        </g>
-      ))}
-      {cells.map(c => (
-        <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width="1" height="1" fill="#131313" />
-      ))}
-    </svg>
+      aria-label={`Billet électronique ${value}`}
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
   );
 }
 
@@ -319,7 +305,7 @@ export default function BilletterieConfirmation() {
           <section className="confirmation__qr-section">
             <h2 className="confirmation__section-title">Votre billet</h2>
             <div className="confirmation__qr-wrap">
-              <QRPlaceholder seed={ticketCode} />
+              <TicketQR value={ticketCode} />
               <span className="confirmation__qr-caption">N° {ticketCode}</span>
             </div>
             <p className="confirmation__hint">

@@ -10,6 +10,7 @@ import Galerie from './pages/Galerie';
 import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminBilletterie from './pages/admin/Billetterie';
+import AdminScan from './pages/admin/Scan';
 import AdminCms from './pages/admin/Cms';
 import AdminConfig from './pages/admin/Config';
 import NotFound from './pages/NotFound';
@@ -49,6 +50,14 @@ const App = () => {
         element={
           <ProtectedAdminRoute>
             <AdminBilletterie />
+          </ProtectedAdminRoute>
+        }
+      />
+      <Route
+        path="/admin/scan"
+        element={
+          <ProtectedAdminRoute>
+            <AdminScan />
           </ProtectedAdminRoute>
         }
       />
